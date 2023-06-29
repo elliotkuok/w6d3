@@ -1,14 +1,21 @@
 class UsersController < ApplicationController
     def index
         # render plain: "the index action!"
-        # users = User.all
-        # render json: users
-        render json: params
+        users = User.all
+        render json: users
+        # render json: params
     end
 
     def create
+        user = User.new(user_params)
+        
+        if user.save
+            render json: user
+        else
+            render json: user.error.full_messages, status: :unprocessable_entity
+        end
         # render plain: "the create action!"
-        render json: params
+        # render json: params
     end
  
     def show 
@@ -38,14 +45,9 @@ class UsersController < ApplicationController
         render json: params
     end
 
-    # private
-    # def user_params
-    #     debugger
-    #     params.require(:user).permit(?????)
-    #     # user --> variable name?
-    # end
-
-    #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-    #   Character.create(name: "Luke", movie: movies.first)
+    private
+    def user_params
+        params.require(:user).permit(:name, :email)
+    end
     
 end
